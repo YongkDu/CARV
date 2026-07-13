@@ -1,0 +1,67 @@
+prompts:
+  step_by_step:
+    text: |
+      You are an expert visual reasoning AI. Your task is to perform a visual reasoning task.
+
+      Each image pair consists of two images, showing a set of transformations from the first image to the second.
+
+      Notes for describing the relation:
+
+      Spatial relation must be one of the following: "on", "under", "left", "right". Notice, "under" means the subject is directly below the reference object, not diagonally. If there is diagonally relation, use "left" or "right".
+      The reference object is a piece of furniture like table or chair.
+
+      Task Instruction:
+
+      1. Generate caption for images in image pairs (I1, I2) and (I3, I4) and describe the transformations in natural language.
+          Use the format:
+          **Caption of (I1)**: [Concise caption of image I1]
+          **Caption of (I2)**: [Concise caption of image I2]
+          **Transformation of (I1, I2)**: [Describe the differences of the two images, be specific and detailed]
+          **Caption of (I3)**: [Concise caption of image I3]
+          **Caption of (I4)**: [Concise caption of image I4]
+          **Transformation of (I3, I4)**: [Describe the differences of the two images, be specific and detailed]
+      2. Decompose the transformation of each image pair according to the property(s).
+          Describe what changes, and from which to which. i.e. [texture] changes from [metal] to [glass].
+          Use the format:
+          **Transformation T1**: [Your description of the transformation]
+          **Transformation T2**: [Your description of the transformation]
+      3. Derive a final target transformation rule based on the set operation {operation} on T1 and T2.
+          {description}
+          When T1 or T2 contains items which indicate no change
+          For example, T1 includes "[property] remains the same", and T2 includes "[property] changes from A to B".
+          When the operation is UNION, only consider the transformation that indicates a change for that property in the target transformation.
+          When the operation is INTERSECTION, consider that there is no change for that property in the target transformation.
+            
+          Describe what changes, and from which to which. i.e. [texture] changes from [metal] to [glass].
+          Use the format:
+          **Target Transformation**: [Your description of the final transformation]
+      4. Apply this final transformation rule to the query image I5 to predict the resulting image.
+
+      The final output should be a concise caption of the resulting image in JSON format. If there is no resulting image, directly respond with "No resulting image."
+
+      ### **REQUIRED OUTPUT FORMAT**
+
+      ```json
+      {{
+        "caption": "your_concise_caption_of_the_resulting_image"
+      }}
+      ```
+  direct:
+    text: |
+      You are an expert visual reasoning AI. Your task is to perform a visual reasoning task.
+
+      You are given an image pair and a query image. The image pair consists of two images, showing transformation(s) from the first image to the second.
+      Find the transformation(s) and apply to the query image to predict the resulting image.
+
+      The final output should be a concise caption of the resulting image in JSON format.
+
+      ### **REQUIRED OUTPUT FORMAT**
+
+      ```json
+      {{
+        "caption": "your_concise_caption_of_the_resulting_image"
+      }}
+      ```
+      
+      
+      

@@ -1,0 +1,29 @@
+# API credentials
+configs/
+.env
+
+# Dataset and outputs (distributed via HuggingFace)
+data/
+data_path_all/
+data_labels_all/
+outputs/
+output*/
+
+# Analysis artifacts
+error_ana*/
+figures*/
+
+# Not for public release
+annotation/
+notebooks/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.eggs/
+
+# Misc
+.DS_Store
+*.log

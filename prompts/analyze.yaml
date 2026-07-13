@@ -1,0 +1,81 @@
+prompts:
+  general:
+    description: "Analyze compositional analogy."
+    text: |
+      You are an evaluator for the image captioning task. Given the ground truth image and reference caption, please analyze the correctness of the model's final answer.
+
+      If "under" is mentioned in the reference caption, it indicates that one object is positioned directly below another object in the image. Please pay special attention to this spatial relationship when evaluating the model's response.
+
+      Here is the reference caption:
+      ***
+      {label_caption}
+      ***
+
+      Here is the model's response:
+      ***
+      {caption}
+      ***
+
+      Return your analysis in the following format:
+
+      ```json
+            {{
+              "correctness": true or false,
+              "reason": "brief explanation of why the answer is correct or incorrect"
+            }}
+      ```
+  overall:
+    description: "Overall analysis of the compositional analogy."
+    text: |
+      You are an evaluator for a visual reasoning task. You will receive the response from a model. Your task is to evaluate the response according to the instruction below.
+
+      Here is the model's response:
+      {response}
+
+      The evaluation tasks include:
+      1. Perception: Check whether the model correctly perceives the visual changes in two image pairs (I1, I2) and (I3, I4).
+        Instruction:
+          (1) whether the response is correct according to the reference captions. The reference caption provides multiple details (color, number, position), the model's response should reflect these details accurately. Notice, if position in the reference caption is "right/left" but the response only says "under", consider it incorrect.
+          Notice, for subject like scissors, "one scissors" is the same as "one pair of scissors" and "two scissors" is the same as "two pairs of scissors".
+          Reference captions:
+            Image1: {caption1}
+            Image2: {caption2}
+            Image3: {caption3}
+            Image4: {caption4}
+          If the captions are correct, then according to the caption, check
+          (2) whether the model's transformation descriptions are correct;
+        Consider the model correctly perceives the visual changes if the model correctly captions the images and describes the transformations for BOTH image pairs.
+      2. Decomposition: Check whether the model correctly decomposes the transformation of each image pair according to the property(s).
+        Instruction:
+          (1) When describing one transformation, the model must follow [property] changes from [value A] to [value B].
+              The property must be a general concept, like "position", "object", "subject", "color", "number", "furniture" or the combination of general concepts, i,.e., "object position", "object color" etc.
+              Wrong examples could be: [position of the cup] changes from [on] to [under]; [object on table] changes from [cup] to [bowl].
+              Correct examples could be: [object position] changes from [on] to [under]; [object color] changes from [red] to [blue].
+          (2) Each transformation ([property] changes from [value A] to [value B]) must be atomic, describing only one single, indivisible property change.
+              **Carefully check if the model bundles multiple properties into one transformation.**
+              Wrong examples could be: [position] changes from [on chair] to [under table] (bundle position and object); [object] changes from [blue chair] to [red table] (bundle object and color).
+              Notice, the model can describe transformations in one sentence or multiple sentences, as long as each transformation is atomic.
+          If the reponse vialate any of the above two rules, consider it incorrect.
+          If each transformation satisfies the above two rules, check
+          (3) Compare T1 and T2 with the reference transformations. The transformations in the reference must be included in the model's response.
+          Reference transformations:
+            Transformation T1: {ground_truth_T1}
+            Transformation T2: {ground_truth_T2}
+          If any transformation in the reference is missing or inconsistent in the response, consider it incorrect.
+      3. Composition: Check whether the model correctly derives the target transformation rule based on the set operation on T1 and T2.
+        Reference target transformation:
+          Transformation T: {target_transformation}
+      4. Application: Check whether the model correctly applies this final transformation rule to the query image I5 to predict the resulting image.
+        Query image: {caption5}
+      
+      ### **REQUIRED OUTPUT FORMAT**
+
+      ```json
+      {{
+        "failure_stage": 1,2,3, or 4 (indicating which evaluation task the model first failed at; if all tasks are correct, return 0),
+        "reasoning_summary": A brief explanation of your evaluation.
+      }}
+      ```
+      **Evaluate the response step-by-step and you MUST state all intermediate reasoning before giving the final answer.**
+
+  

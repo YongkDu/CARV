@@ -1,0 +1,11 @@
+torch==2.5.1
+torchvision==0.20.1
+transformers==4.51.3
+accelerate
+pillow
+requests
+tqdm
+pyyaml
+openai
+google-genai
+sentence-transformers
