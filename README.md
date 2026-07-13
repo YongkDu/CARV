@@ -32,7 +32,7 @@ Download from HuggingFace:
 
 ```bash
 pip install huggingface-hub
-huggingface-cli download YongkDu/carv-dataset --repo-type dataset --local-dir ./carv-data
+huggingface-cli download duyongka/CARV --repo-type dataset --local-dir ./carv-data
 ```
 
 Directory layout:
